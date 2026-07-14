@@ -37,7 +37,9 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-connectDB();
+(async () => {
+  await connectDB();
+})();
 
 app.use(cors());
 app.use(helmet());
