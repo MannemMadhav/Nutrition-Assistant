@@ -2,7 +2,6 @@ import MainLayout from "../../components/layout/MainLayout";
 
 import NutritionCard from "../../components/nutrition/NutritionCard";
 import MacroProgress from "../../components/nutrition/MacroProgress";
-import WaterTracker from "../../components/nutrition/WaterTracker.jsx";
 
 function Nutrition() {
   return (
@@ -61,7 +60,7 @@ function Nutrition() {
 
         </div>
 
-        <WaterTracker />
+        
 
       </div>
 
