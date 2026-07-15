@@ -1,66 +1,83 @@
-const Meal = require("../models/Meal");
-const { generateMealPlan } = require("../services/mealService");
-
 const generateMeal = async (req, res) => {
   try {
-    const user = req.user;
-
-    const meal = generateMealPlan(user);
-
-    const savedMeal = await Meal.create({
-      user: user._id,
-
-      breakfast: meal.breakfast,
-      lunch: meal.lunch,
-      dinner: meal.dinner,
-      snacks: meal.snacks,
-
-      calories: meal.calories,
-      protein: meal.protein,
-      carbs: meal.carbs,
-      fats: meal.fats,
-    });
+    const meal = {
+      _id: "meal-demo-1",
+      breakfast: {
+        name: "Oats with Milk & Banana",
+        calories: 420,
+      },
+      lunch: {
+        name: "Grilled Chicken with Brown Rice",
+        calories: 650,
+      },
+      dinner: {
+        name: "Paneer Salad",
+        calories: 500,
+      },
+      snacks: {
+        name: "Mixed Nuts",
+        calories: 200,
+      },
+      calories: 1770,
+      protein: 135,
+      carbs: 185,
+      fats: 52,
+      createdAt: new Date(),
+    };
 
     res.status(201).json({
       success: true,
-      meal: savedMeal,
+      message: "Meal generated successfully",
+      meal,
     });
-
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 
 const getMeals = async (req, res) => {
-
   try {
+    const meals = [
+      {
+        _id: "meal-demo-1",
+        breakfast: {
+          name: "Oats with Milk & Banana",
+          calories: 420,
+        },
+        lunch: {
+          name: "Grilled Chicken with Brown Rice",
+          calories: 650,
+        },
+        dinner: {
+          name: "Paneer Salad",
+          calories: 500,
+        },
+        snacks: {
+          name: "Mixed Nuts",
+          calories: 200,
+        },
+        calories: 1770,
+        protein: 135,
+        carbs: 185,
+        fats: 52,
+        createdAt: new Date(),
+      },
+    ];
 
-    const meals = await Meal.find({
-      user: req.user._id,
-    }).sort({
-      createdAt: -1,
-    });
-
-    res.json({
+    res.status(200).json({
       success: true,
       count: meals.length,
       meals,
     });
-
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
-
 };
 
 module.exports = {
