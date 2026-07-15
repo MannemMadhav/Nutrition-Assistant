@@ -1,61 +1,37 @@
-const User = require("../models/User");
-
-// ==========================
-// Get Profile
-// ==========================
 const getProfile = async (req, res) => {
-  try {
-    res.status(200).json({
-      success: true,
-      user: req.user,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  res.status(200).json({
+    success: true,
+    user: {
+      _id: "demo-user-id",
+      fullName: "Madhav",
+      email: "madhav@gmail.com",
+      age: 20,
+      gender: "Male",
+      height: 175,
+      weight: 70,
+      goal: "Muscle Gain",
+      activityLevel: "Moderately Active",
+    },
+  });
 };
 
-// ==========================
-// Update Profile
-// ==========================
 const updateProfile = async (req, res) => {
-  try {
-
-    const user = await User.findById(req.user._id);
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    user.fullName = req.body.fullName || user.fullName;
-    user.age = req.body.age || user.age;
-    user.gender = req.body.gender || user.gender;
-    user.height = req.body.height || user.height;
-    user.weight = req.body.weight || user.weight;
-    user.goal = req.body.goal || user.goal;
-    user.activityLevel = req.body.activityLevel || user.activityLevel;
-
-    const updatedUser = await user.save();
-
-    res.status(200).json({
-      success: true,
-      message: "Profile Updated Successfully",
-      user: updatedUser,
-    });
-
-  } catch (error) {
-
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-
-  }
+  res.status(200).json({
+    success: true,
+    message: "Profile Updated Successfully",
+    user: {
+      _id: "demo-user-id",
+      fullName: req.body.fullName || "Madhav",
+      email: "madhav@gmail.com",
+      age: req.body.age || 20,
+      gender: req.body.gender || "Male",
+      height: req.body.height || 175,
+      weight: req.body.weight || 70,
+      goal: req.body.goal || "Muscle Gain",
+      activityLevel:
+        req.body.activityLevel || "Moderately Active",
+    },
+  });
 };
 
 module.exports = {
