@@ -1,56 +1,41 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
 
 const protect = async (req, res, next) => {
   try {
-    console.log("\n========== AUTH DEBUG ==========");
-    console.log("Authorization Header:");
-    console.log(req.headers.authorization);
+    const authHeader = req.headers.authorization;
 
-    let token;
-
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer ")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
-
-      console.log("\nReceived Token:");
-      console.log(token);
-
-      console.log("\nJWT Secret:");
-      console.log(process.env.JWT_SECRET);
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      console.log("\nDecoded Token:");
-      console.log(decoded);
-
-      const user = await User.findById(decoded.id).select("-password");
-
-      if (!user) {
-        return res.status(401).json({
-          success: false,
-          message: "User not found",
-        });
-      }
-
-      req.user = user;
-
-      next();
-    } else {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
         success: false,
-        message: "No Bearer token provided",
+        message: "No token provided",
       });
     }
-  } catch (error) {
-    console.log("\n========== JWT ERROR ==========");
-    console.log(error);
 
+    const token = authHeader.split(" ")[1];
+
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "demo_secret"
+    );
+
+    // Demo user (No MongoDB)
+    req.user = {
+      _id: decoded.id || "demo-user-id",
+      fullName: "Madhav",
+      email: "madhav@gmail.com",
+      age: 20,
+      gender: "Male",
+      height: 175,
+      weight: 70,
+      goal: "Muscle Gain",
+      activityLevel: "Moderately Active",
+    };
+
+    next();
+  } catch (error) {
     return res.status(401).json({
       success: false,
-      message: "Token is invalid.",
+      message: "Invalid Token",
     });
   }
 };
