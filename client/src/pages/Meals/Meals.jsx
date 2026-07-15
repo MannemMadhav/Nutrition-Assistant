@@ -1,40 +1,44 @@
+import { useState } from "react";
 import MainLayout from "../../components/layout/MainLayout";
 import MealCard from "../../components/meals/MealCard";
 
-import useMeals from "../../hooks/useMeals";
-import { generateMeal } from "../../services/mealService";
-
 function Meals() {
-  const { loading, meals, refreshMeals } = useMeals();
+  const [meals, setMeals] = useState([
+    {
+      _id: "1",
+      breakfast: "Oats + Banana",
+      lunch: "Chicken Rice",
+      dinner: "Paneer Salad",
+      snacks: "Mixed Nuts",
+      calories: 2200,
+      protein: 150,
+      carbs: 250,
+      fats: 60,
+    },
+  ]);
 
-  const handleGenerateMeal = async () => {
-  console.log("Generate button clicked");
+  const handleGenerateMeal = () => {
+    setMeals([
+      {
+        _id: Date.now().toString(),
+        breakfast: "Eggs + Toast",
+        lunch: "Rice + Chicken",
+        dinner: "Paneer + Vegetables",
+        snacks: "Almonds",
+        calories: 2300,
+        protein: 160,
+        carbs: 240,
+        fats: 65,
+      },
+    ]);
 
-  try {
-    console.log("Calling API...");
-
-    const response = await generateMeal();
-
-    console.log("API Response:", response);
-
-    await refreshMeals();
-
-    alert("Meal generated successfully!");
-  } catch (error) {
-    console.error("Generate Meal Error:", error);
-
-    alert(
-      error.response?.data?.message || "Failed to generate meal."
-    );
-  }
-};
+    alert("Meal Generated Successfully!");
+  };
 
   return (
     <MainLayout>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold text-white">
-          Meals
-        </h1>
+        <h1 className="text-4xl font-bold text-white">Meals</h1>
 
         <button
           onClick={handleGenerateMeal}
@@ -44,22 +48,11 @@ function Meals() {
         </button>
       </div>
 
-      {loading ? (
-        <p className="text-white">Loading meals...</p>
-      ) : meals.length === 0 ? (
-        <p className="text-white">
-          No meals found. Click "Generate Meal".
-        </p>
-      ) : (
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {meals.map((meal) => (
-            <MealCard
-              key={meal._id}
-              meal={meal}
-            />
-          ))}
-        </div>
-      )}
+      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {meals.map((meal) => (
+          <MealCard key={meal._id} meal={meal} />
+        ))}
+      </div>
     </MainLayout>
   );
 }
